@@ -1,0 +1,17 @@
+.task {
+    padding: 10px 10px !important;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+    background-color: transparent !important;
+}
+
+.task .name {
+    width: 100%;
+}
+
+.task .btn {
+    width: 150px;
+}
