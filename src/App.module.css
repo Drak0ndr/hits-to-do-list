@@ -32,4 +32,8 @@
     .header .btn {
         width: 100%;
     }
+
+    .header a {
+        width: 100%;
+    }
 }
