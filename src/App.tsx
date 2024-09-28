@@ -33,7 +33,7 @@ export const App = () => {
     // localStorage.setItem('tasks', JSON.stringify(temp))
     console.log(id)
     deleteTask(id).then((responce) => {
-      // console.log(responce)
+      console.log(responce)
       getTasks().then((data) => {
         setTasks(data)
         oldUpdate = new Date().getTime()
@@ -45,7 +45,7 @@ export const App = () => {
     // tasks[id].name = taskName
     // localStorage.setItem('tasks', JSON.stringify(tasks))
     postEditTask(id, taskName).then((res) => {
-      // console.log(res)
+      console.log(res)
       oldUpdate = new Date().getTime()
       console.log(new Date().getTime() - oldUpdate)
     })
@@ -74,7 +74,7 @@ export const App = () => {
     // tasks[id].isComplete = status
     // localStorage.setItem('tasks', JSON.stringify(tasks))
     postEditTask(id, undefined, status ? 1 : 0).then((res) => {
-      // console.log(res)
+      console.log(res)
       oldUpdate = new Date().getTime()
     })
   }
