@@ -1,4 +1,5 @@
 type task = {
-    complete: boolean
+    id: number
+    isComplete: boolean
     name: string
 }

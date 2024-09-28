@@ -1,27 +1,16 @@
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
+import { getTasks } from '../api/getTasks'
 
-import { RefObject } from 'react'
-
-export const saveTasks = (ref: RefObject<HTMLAnchorElement>) => {
-  const file = new Blob([localStorage.getItem('tasks') as string], {
+export const saveTasks = async () => {
+  const tasks = await getTasks()
+  const data: { name: string; isComplete: boolean }[] = []
+  tasks.forEach((item) => {
+    data.push({ name: item.name, isComplete: item.isComplete })
+  })
+  const file = new Blob([JSON.stringify(data)], {
     type: 'application/JSON'
   })
-
-  ref.current!.href = URL.createObjectURL(file)
-  ref.current!.download = `tasks ${new Date()}`
   const id = new Date()
-  // const createDir = async() => {
-  //   const test = await Filesystem.writeFile({
-  //     path: `todo/test.txt`,
-  //     data: 'is data',
-  //     directory: Directory.Documents,
-  //     encoding: Encoding.UTF8,
-  //     recursive: true
-  //   })
-  //   console.log(test)
-  // }
-
-  // createDir()
 
   const writeFile = async () => {
     const test = await Filesystem.writeFile({
@@ -35,4 +24,8 @@ export const saveTasks = (ref: RefObject<HTMLAnchorElement>) => {
   }
 
   writeFile()
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(file)
+  link.download = `tasks ${new Date()}`
+  link.click()
 }

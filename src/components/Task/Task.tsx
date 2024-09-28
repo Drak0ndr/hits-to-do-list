@@ -15,7 +15,7 @@ interface props {
 export const Task = ({ id, complete, taskName, del, rename, changeStatus }: props) => {
   const [name, setName] = useState(taskName)
   const [isComplete, setIsComplete] = useState(complete)
-  console.log(isComplete, name)
+  // console.log(isComplete, name)
   useEffect(() => {
     rename(id, name)
   }, [name])
