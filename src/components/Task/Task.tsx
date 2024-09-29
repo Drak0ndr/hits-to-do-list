@@ -2,31 +2,44 @@ import { Button, Card, Checkbox, Input } from '@mantine/core'
 
 import styles from './Task.module.css'
 import { useEffect, useState } from 'react'
+import { postEditTask } from '../../api/postEditTask'
+import { getTasks } from '../../api/getTasks'
 
 interface props {
   id: number
   complete: boolean
   taskName: string
   del: (id: number) => void
-  rename: (id: number, name: string) => void
-  changeStatus: (id: number, status: boolean) => void
 }
 
-export const Task = ({ id, complete, taskName, del, rename, changeStatus }: props) => {
+export const Task = ({ id, complete, taskName, del }: props) => {
   const [name, setName] = useState(taskName)
   const [isComplete, setIsComplete] = useState(complete)
   // console.log(isComplete, name)
   useEffect(() => {
-    rename(id, name)
+    postEditTask(id, name).then((res) => {
+      console.log(res)
+    })
   }, [name])
 
   useEffect(() => {
-    changeStatus(id, isComplete)
+    postEditTask(id, undefined, isComplete ? 1 : 0).then((res) => {
+      console.log(res)
+    })
   }, [isComplete])
 
-  // useEffect(() => {
-  //   console.log(isComplete, name)
-  // })
+  useEffect(() => {
+    setInterval(() => {
+      getTasks().then((res) => {
+        res.forEach((item) => {
+          if (item.id == id) {
+            setName(item.name)
+            setIsComplete(item.isComplete)
+          }
+        })
+      })
+    }, 500)
+  }, [])
 
   return (
     <Card className={styles.task} withBorder>

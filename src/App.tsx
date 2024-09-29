@@ -10,9 +10,7 @@ import { saveTasks } from './utils/saveTasks'
 import { url } from './consts/url'
 import { getTasks } from './api/getTasks'
 import { deleteTask } from './api/deleteTask'
-import { postEditTask } from './api/postEditTask'
 
-let oldUpdate = new Date().getTime()
 let taskCopy: task[] = []
 
 export const App = () => {
@@ -26,7 +24,6 @@ export const App = () => {
     getTasks().then((data) => {
       setTasks(data)
       taskCopy = data
-      oldUpdate = new Date().getTime()
     })
 
     setInterval(() => {
@@ -35,11 +32,9 @@ export const App = () => {
           // setTasks([])
           setTasks(data)
           taskCopy = data
-          oldUpdate = new Date().getTime()
-          setTimeout(() => {}, 100)
         }
       })
-    }, 1000)
+    }, 500)
   }, [])
 
   const delTask = (id: number) => {
@@ -53,18 +48,7 @@ export const App = () => {
       getTasks().then((data) => {
         setTasks(data)
         taskCopy = data
-        oldUpdate = new Date().getTime()
       })
-    })
-  }
-
-  const renameTask = (id: number, taskName: string) => {
-    // tasks[id].name = taskName
-    // localStorage.setItem('tasks', JSON.stringify(tasks))
-    postEditTask(id, taskName).then((res) => {
-      console.log(res)
-      oldUpdate = new Date().getTime()
-      console.log(new Date().getTime() - oldUpdate)
     })
   }
 
@@ -81,21 +65,10 @@ export const App = () => {
         getTasks().then((data) => {
           setTasks(data)
           taskCopy = data
-          oldUpdate = new Date().getTime()
         })
       )
       setNewTaskName('')
     }
-  }
-
-  const changeStatusTask = (id: number, status: boolean) => {
-    // tasks[id].isComplete = status
-    // localStorage.setItem('tasks', JSON.stringify(tasks))
-    postEditTask(id, undefined, status ? 1 : 0).then((res) => {
-      console.log(res)
-      oldUpdate = new Date().getTime()
-      console.log(oldUpdate)
-    })
   }
 
   useEffect(() => {
@@ -109,7 +82,6 @@ export const App = () => {
           getTasks().then((data) => {
             setTasks(data)
             taskCopy = data
-            oldUpdate = new Date().getTime()
           })
         })
       }
@@ -155,8 +127,6 @@ export const App = () => {
             complete={item.isComplete}
             taskName={item.name}
             del={delTask}
-            rename={renameTask}
-            changeStatus={changeStatusTask}
           />
         ))}
       </Box>
