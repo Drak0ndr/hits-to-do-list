@@ -12,18 +12,34 @@ import { getTasks } from './api/getTasks'
 import { deleteTask } from './api/deleteTask'
 import { postEditTask } from './api/postEditTask'
 
+let oldUpdate = new Date().getTime()
+let taskCopy: task[] = []
+
 export const App = () => {
   const [file, setFile] = useState<File | null>()
   const [newTaskName, setNewTaskName] = useState('')
   const [tasks, setTasks] = useState<task[]>([])
   const download = useRef<HTMLAnchorElement>(null)
   console.log(tasks)
-  let oldUpdate = new Date().getTime()
 
   useEffect(() => {
     getTasks().then((data) => {
       setTasks(data)
+      taskCopy = data
+      oldUpdate = new Date().getTime()
     })
+
+    setInterval(() => {
+      getTasks().then((data) => {
+        if (data.length != taskCopy.length) {
+          // setTasks([])
+          setTasks(data)
+          taskCopy = data
+          oldUpdate = new Date().getTime()
+          setTimeout(() => {}, 100)
+        }
+      })
+    }, 1000)
   }, [])
 
   const delTask = (id: number) => {
@@ -36,6 +52,7 @@ export const App = () => {
       console.log(responce)
       getTasks().then((data) => {
         setTasks(data)
+        taskCopy = data
         oldUpdate = new Date().getTime()
       })
     })
@@ -63,6 +80,7 @@ export const App = () => {
       }).then(() =>
         getTasks().then((data) => {
           setTasks(data)
+          taskCopy = data
           oldUpdate = new Date().getTime()
         })
       )
@@ -76,6 +94,7 @@ export const App = () => {
     postEditTask(id, undefined, status ? 1 : 0).then((res) => {
       console.log(res)
       oldUpdate = new Date().getTime()
+      console.log(oldUpdate)
     })
   }
 
@@ -89,6 +108,7 @@ export const App = () => {
         fetch(`${url}/upload`, { method: 'POST', body: reader.result }).then(() => {
           getTasks().then((data) => {
             setTasks(data)
+            taskCopy = data
             oldUpdate = new Date().getTime()
           })
         })
