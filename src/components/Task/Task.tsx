@@ -17,15 +17,13 @@ export const Task = ({ id, complete, taskName, del }: props) => {
   const [isComplete, setIsComplete] = useState(complete)
   // console.log(isComplete, name)
   useEffect(() => {
-    postEditTask(id, name).then((res) => {
-      console.log(res)
-    })
+    postEditTask(id, name)
+    console.log('post log', name)
   }, [name])
 
   useEffect(() => {
-    postEditTask(id, undefined, isComplete ? 1 : 0).then((res) => {
-      console.log(res)
-    })
+    postEditTask(id, undefined, isComplete ? 1 : 0)
+    console.log('post log', isComplete)
   }, [isComplete])
 
   useEffect(() => {
@@ -39,7 +37,7 @@ export const Task = ({ id, complete, taskName, del }: props) => {
         })
       })
     }, 500)
-  }, [])
+  }, [id, complete, taskName])
 
   return (
     <Card className={styles.task} withBorder>

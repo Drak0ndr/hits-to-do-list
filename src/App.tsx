@@ -7,9 +7,10 @@ import { Task } from './components/Task/Task'
 import '@mantine/core/styles.css'
 import styles from './App.module.css'
 import { saveTasks } from './utils/saveTasks'
-import { url } from './consts/url'
 import { getTasks } from './api/getTasks'
 import { deleteTask } from './api/deleteTask'
+import { postAddTask } from './api/postAddTask'
+import { postUploadTasks } from './api/postUploadTasks'
 
 let taskCopy: task[] = []
 
@@ -32,6 +33,7 @@ export const App = () => {
           // setTasks([])
           setTasks(data)
           taskCopy = data
+          console.log(data)
         }
       })
     }, 500)
@@ -58,10 +60,7 @@ export const App = () => {
       // temp.unshift({ isComplete: false, name: newTaskName })
       // setTasks(temp)
       // localStorage.setItem('tasks', JSON.stringify(temp))
-      fetch(`${url}/add`, {
-        method: 'POST',
-        body: JSON.stringify({ name: newTaskName })
-      }).then(() =>
+      postAddTask(newTaskName).then(() =>
         getTasks().then((data) => {
           setTasks(data)
           taskCopy = data
@@ -73,15 +72,17 @@ export const App = () => {
 
   useEffect(() => {
     if (file) {
-      setTasks([])
       const reader = new FileReader()
       reader.readAsText(file)
 
       reader.onload = () => {
-        fetch(`${url}/upload`, { method: 'POST', body: reader.result }).then(() => {
+        postUploadTasks(reader.result).then(() => {
           getTasks().then((data) => {
-            setTasks(data)
-            taskCopy = data
+            setTimeout(() => {
+              setTasks(data)
+              taskCopy = data
+              setFile(null)
+            }, 100)
           })
         })
       }
